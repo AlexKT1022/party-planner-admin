@@ -4,49 +4,39 @@ const COHORT = '/2507-ftb-et-web-ft'; // Make sure to change this!
 const API = BASE + COHORT;
 const initialParties = [
   {
-    id: 14008,
     name: 'optimize sticky deliverables',
     description:
       'Exercitationem vero maxime exercitationem excepturi pariatur dolores tempore. Quasi quo expedita eaque facere adipisci enim. Nisi aspernatur fugit quis molestias explicabo enim accusamus beatae recusandae.',
     date: '2023-08-20T23:40:08.000Z',
     location: '75141 Ziemann Throughway',
-    cohortId: 6307,
   },
   {
-    id: 14009,
     name: 'unleash extensible systems',
     description:
       'Ullam doloribus ut tempora cumque aliquam dignissimos numquam voluptatum. Similique aut dolore cumque similique adipisci a exercitationem facilis. Harum tempora praesentium laborum optio voluptatem.',
     date: '2024-01-07T12:20:44.000Z',
     location: '41353 Koss Key',
-    cohortId: 6307,
   },
   {
-    id: 14010,
     name: 'harness synergistic e-commerce',
     description:
       'Ducimus sapiente architecto cumque eius. Dolore nihil excepturi voluptatibus asperiores eos minima. Quasi maxime libero deleniti vel atque cumque quis.',
     date: '2023-09-04T20:09:22.000Z',
     location: "87072 O'Keefe Wells",
-    cohortId: 6307,
   },
   {
-    id: 14011,
     name: 'aggregate customized partnerships',
     description:
       'Impedit asperiores placeat facilis quas esse repellat nam dicta ullam. Quam ipsa quis esse ipsam occaecati. Consectetur esse cumque atque veritatis eius delectus repellat.',
     date: '2023-11-13T07:00:24.000Z',
     location: '427 Freda Parkways',
-    cohortId: 6307,
   },
   {
-    id: 14012,
     name: 'facilitate strategic platforms',
     description:
       'Perspiciatis maxime voluptate sit mollitia nobis. Reiciendis quibusdam inventore cupiditate ratione. Eius itaque rerum ea nihil.',
     date: '2023-07-23T20:18:02.000Z',
     location: '2660 Everardo Forges',
-    cohortId: 6307,
   },
 ];
 
@@ -106,7 +96,7 @@ const getGuests = async () => {
   }
 };
 
-/** */
+/** Adds new party to state */
 const createParty = async (partyObj) => {
   const res = await fetch(API + '/events', {
     method: 'POST',
@@ -120,18 +110,27 @@ const createParty = async (partyObj) => {
   return data;
 };
 
-/** */
+/**  Deletes selected party from state */
 const deleteParty = async (id) => {
   await fetch(API + `/events/${id}`, {
     method: 'DELETE',
   });
 
   resetSelectedParty();
-  getParties();
+
+  await getParties();
 };
 
 /** */
-const resetAPI = async () => {};
+const resetAPI = async () => {
+  resetSelectedParty();
+
+  parties.forEach(async (party) => await deleteParty(party.id));
+
+  initialParties.forEach(async (party) => await createParty(party));
+
+  await getParties();
+};
 
 /** Resets selectedParty state to undefined */
 const resetSelectedParty = () => {
@@ -281,7 +280,7 @@ const ResetParties = () => {
   const $resetParties = document.createElement('button');
   $resetParties.innerText = 'Reset Parties';
 
-  $resetParties.addEventListener('click', () => console.log(initialParties));
+  $resetParties.addEventListener('click', () => resetAPI());
 
   return $resetParties;
 };
