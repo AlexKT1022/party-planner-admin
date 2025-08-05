@@ -62,7 +62,7 @@ const getGuests = async () => {
 // === Components ===
 
 /** Party name that shows more details about the party when clicked */
-constPartyListItem = (party) => {
+const PartyListItem = (party) => {
   const $li = document.createElement('li');
 
   if (party.id === selectedParty?.id) {
