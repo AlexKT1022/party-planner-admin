@@ -1,6 +1,6 @@
 // === Constants ===
-const BASE = "https://fsa-crud-2aa9294fe819.herokuapp.com/api";
-const COHORT = ""; // Make sure to change this!
+const BASE = 'https://fsa-crud-2aa9294fe819.herokuapp.com/api';
+const COHORT = '/2507-ftb-et-web-ft'; // Make sure to change this!
 const API = BASE + COHORT;
 
 // === State ===
@@ -12,7 +12,7 @@ let guests = [];
 /** Updates state with all parties from the API */
 async function getParties() {
   try {
-    const response = await fetch(API + "/events");
+    const response = await fetch(API + '/events');
     const result = await response.json();
     parties = result.data;
     render();
@@ -24,7 +24,7 @@ async function getParties() {
 /** Updates state with a single party from the API */
 async function getParty(id) {
   try {
-    const response = await fetch(API + "/events/" + id);
+    const response = await fetch(API + '/events/' + id);
     const result = await response.json();
     selectedParty = result.data;
     render();
@@ -36,7 +36,7 @@ async function getParty(id) {
 /** Updates state with all RSVPs from the API */
 async function getRsvps() {
   try {
-    const response = await fetch(API + "/rsvps");
+    const response = await fetch(API + '/rsvps');
     const result = await response.json();
     rsvps = result.data;
     render();
@@ -48,7 +48,7 @@ async function getRsvps() {
 /** Updates state with all guests from the API */
 async function getGuests() {
   try {
-    const response = await fetch(API + "/guests");
+    const response = await fetch(API + '/guests');
     const result = await response.json();
     guests = result.data;
     render();
@@ -61,23 +61,23 @@ async function getGuests() {
 
 /** Party name that shows more details about the party when clicked */
 function PartyListItem(party) {
-  const $li = document.createElement("li");
+  const $li = document.createElement('li');
 
   if (party.id === selectedParty?.id) {
-    $li.classList.add("selected");
+    $li.classList.add('selected');
   }
 
   $li.innerHTML = `
     <a href="#selected">${party.name}</a>
   `;
-  $li.addEventListener("click", () => getParty(party.id));
+  $li.addEventListener('click', () => getParty(party.id));
   return $li;
 }
 
 /** A list of names of all parties */
 function PartyList() {
-  const $ul = document.createElement("ul");
-  $ul.classList.add("parties");
+  const $ul = document.createElement('ul');
+  $ul.classList.add('parties');
 
   const $parties = parties.map(PartyListItem);
   $ul.replaceChildren(...$parties);
@@ -88,12 +88,12 @@ function PartyList() {
 /** Detailed information about the selected party */
 function SelectedParty() {
   if (!selectedParty) {
-    const $p = document.createElement("p");
-    $p.textContent = "Please select a party to learn more.";
+    const $p = document.createElement('p');
+    $p.textContent = 'Please select a party to learn more.';
     return $p;
   }
 
-  const $party = document.createElement("section");
+  const $party = document.createElement('section');
   $party.innerHTML = `
     <h3>${selectedParty.name} #${selectedParty.id}</h3>
     <time datetime="${selectedParty.date}">
@@ -103,14 +103,14 @@ function SelectedParty() {
     <p>${selectedParty.description}</p>
     <GuestList></GuestList>
   `;
-  $party.querySelector("GuestList").replaceWith(GuestList());
+  $party.querySelector('GuestList').replaceWith(GuestList());
 
   return $party;
 }
 
 /** List of guests attending the selected party */
 function GuestList() {
-  const $ul = document.createElement("ul");
+  const $ul = document.createElement('ul');
   const guestsAtParty = guests.filter((guest) =>
     rsvps.find(
       (rsvp) => rsvp.guestId === guest.id && rsvp.eventId === selectedParty.id
@@ -119,7 +119,7 @@ function GuestList() {
 
   // Simple components can also be created anonymously:
   const $guests = guestsAtParty.map((guest) => {
-    const $guest = document.createElement("li");
+    const $guest = document.createElement('li');
     $guest.textContent = guest.name;
     return $guest;
   });
@@ -130,7 +130,7 @@ function GuestList() {
 
 // === Render ===
 function render() {
-  const $app = document.querySelector("#app");
+  const $app = document.querySelector('#app');
   $app.innerHTML = `
     <h1>Party Planner</h1>
     <main>
@@ -145,8 +145,8 @@ function render() {
     </main>
   `;
 
-  $app.querySelector("PartyList").replaceWith(PartyList());
-  $app.querySelector("SelectedParty").replaceWith(SelectedParty());
+  $app.querySelector('PartyList').replaceWith(PartyList());
+  $app.querySelector('SelectedParty').replaceWith(SelectedParty());
 }
 
 async function init() {
