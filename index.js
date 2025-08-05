@@ -10,57 +10,59 @@ let rsvps = [];
 let guests = [];
 
 /** Updates state with all parties from the API */
-async function getParties() {
+const getParties = async () => {
   try {
     const response = await fetch(API + '/events');
     const result = await response.json();
     parties = result.data;
     render();
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
   }
-}
+};
 
 /** Updates state with a single party from the API */
-async function getParty(id) {
+const getParty = async (id) => {
   try {
     const response = await fetch(API + '/events/' + id);
     const result = await response.json();
     selectedParty = result.data;
     render();
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
   }
-}
+};
 
 /** Updates state with all RSVPs from the API */
-async function getRsvps() {
+const getRsvps = async () => {
   try {
     const response = await fetch(API + '/rsvps');
     const result = await response.json();
     rsvps = result.data;
+
     render();
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
   }
-}
+};
 
 /** Updates state with all guests from the API */
-async function getGuests() {
+const getGuests = async () => {
   try {
     const response = await fetch(API + '/guests');
     const result = await response.json();
     guests = result.data;
+
     render();
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
   }
-}
+};
 
 // === Components ===
 
 /** Party name that shows more details about the party when clicked */
-function PartyListItem(party) {
+constPartyListItem = (party) => {
   const $li = document.createElement('li');
 
   if (party.id === selectedParty?.id) {
@@ -71,11 +73,12 @@ function PartyListItem(party) {
     <a href="#selected">${party.name}</a>
   `;
   $li.addEventListener('click', () => getParty(party.id));
+
   return $li;
-}
+};
 
 /** A list of names of all parties */
-function PartyList() {
+const PartyList = () => {
   const $ul = document.createElement('ul');
   $ul.classList.add('parties');
 
@@ -83,13 +86,14 @@ function PartyList() {
   $ul.replaceChildren(...$parties);
 
   return $ul;
-}
+};
 
 /** Detailed information about the selected party */
-function SelectedParty() {
+const SelectedParty = () => {
   if (!selectedParty) {
     const $p = document.createElement('p');
     $p.textContent = 'Please select a party to learn more.';
+
     return $p;
   }
 
@@ -106,10 +110,10 @@ function SelectedParty() {
   $party.querySelector('GuestList').replaceWith(GuestList());
 
   return $party;
-}
+};
 
 /** List of guests attending the selected party */
-function GuestList() {
+const GuestList = () => {
   const $ul = document.createElement('ul');
   const guestsAtParty = guests.filter((guest) =>
     rsvps.find(
@@ -126,10 +130,10 @@ function GuestList() {
   $ul.replaceChildren(...$guests);
 
   return $ul;
-}
+};
 
 // === Render ===
-function render() {
+const render = () => {
   const $app = document.querySelector('#app');
   $app.innerHTML = `
     <h1>Party Planner</h1>
@@ -147,12 +151,13 @@ function render() {
 
   $app.querySelector('PartyList').replaceWith(PartyList());
   $app.querySelector('SelectedParty').replaceWith(SelectedParty());
-}
+};
 
 async function init() {
   await getParties();
   await getRsvps();
   await getGuests();
+
   render();
 }
 
