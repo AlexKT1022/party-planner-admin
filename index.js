@@ -106,6 +106,34 @@ const getGuests = async () => {
   }
 };
 
+/** */
+const createParty = async (partyObj) => {
+  const res = await fetch(API + '/events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(partyObj),
+  });
+  const data = await res.json();
+
+  await getParties();
+
+  return data;
+};
+
+/** */
+const deleteParty = async (id) => {
+  await fetch(API + `/events/${id}`, {
+    method: 'DELETE',
+  });
+
+  resetSelectedParty();
+  getParties();
+};
+
+/** */
+const resetAPI = async () => {};
+
+/** Resets selectedParty state to undefined */
 const resetSelectedParty = () => {
   selectedParty = undefined;
 
@@ -195,19 +223,19 @@ const NewPartyForm = () => {
   $newPartyForm.innerHTML = `
   <label>
     Name
-    <input name="name"></input>
+    <input name="name" type="text" required></input>
   </label>
   <label>
     Description
-    <input name="description"></input>
+    <input name="description" type="text" required></input>
   </label>
   <label>
     Date
-    <input name="date"></input>
+    <input name="date" type="date" required></input>
   </label>
   <label>
     Location
-    <input name="location"></input>
+    <input name="location" type="text" required></input>
   </label>
   <input type="submit"></input>
   `;
@@ -215,7 +243,14 @@ const NewPartyForm = () => {
   $newPartyForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    console.log(e.target);
+    const partyObj = {
+      name: e.target.name.value,
+      description: e.target.description.value,
+      date: new Date(e.target.date.value).toISOString(),
+      location: e.target.location.value,
+    };
+
+    createParty(partyObj);
   });
 
   return $newPartyForm;
@@ -236,7 +271,7 @@ const DeleteButton = () => {
   const $deleteButton = document.createElement('button');
   $deleteButton.innerText = 'Delete Event';
 
-  $deleteButton.addEventListener('click', (e) => console.log(e.target));
+  $deleteButton.addEventListener('click', () => deleteParty(selectedParty.id));
 
   return $deleteButton;
 };
@@ -260,7 +295,7 @@ const render = () => {
       <section>
         <h2>Upcoming Parties</h2>
         <PartyList></PartyList>
-        <h3>Create a new event</h3>
+        <h3>Create a New Party</h3>
         <NewPartyForm></NewPartyForm>
       </section>
       <section id="selected">
