@@ -2,6 +2,53 @@
 const BASE = 'https://fsa-crud-2aa9294fe819.herokuapp.com/api';
 const COHORT = '/2507-ftb-et-web-ft'; // Make sure to change this!
 const API = BASE + COHORT;
+const initialParties = [
+  {
+    id: 14008,
+    name: 'optimize sticky deliverables',
+    description:
+      'Exercitationem vero maxime exercitationem excepturi pariatur dolores tempore. Quasi quo expedita eaque facere adipisci enim. Nisi aspernatur fugit quis molestias explicabo enim accusamus beatae recusandae.',
+    date: '2023-08-20T23:40:08.000Z',
+    location: '75141 Ziemann Throughway',
+    cohortId: 6307,
+  },
+  {
+    id: 14009,
+    name: 'unleash extensible systems',
+    description:
+      'Ullam doloribus ut tempora cumque aliquam dignissimos numquam voluptatum. Similique aut dolore cumque similique adipisci a exercitationem facilis. Harum tempora praesentium laborum optio voluptatem.',
+    date: '2024-01-07T12:20:44.000Z',
+    location: '41353 Koss Key',
+    cohortId: 6307,
+  },
+  {
+    id: 14010,
+    name: 'harness synergistic e-commerce',
+    description:
+      'Ducimus sapiente architecto cumque eius. Dolore nihil excepturi voluptatibus asperiores eos minima. Quasi maxime libero deleniti vel atque cumque quis.',
+    date: '2023-09-04T20:09:22.000Z',
+    location: "87072 O'Keefe Wells",
+    cohortId: 6307,
+  },
+  {
+    id: 14011,
+    name: 'aggregate customized partnerships',
+    description:
+      'Impedit asperiores placeat facilis quas esse repellat nam dicta ullam. Quam ipsa quis esse ipsam occaecati. Consectetur esse cumque atque veritatis eius delectus repellat.',
+    date: '2023-11-13T07:00:24.000Z',
+    location: '427 Freda Parkways',
+    cohortId: 6307,
+  },
+  {
+    id: 14012,
+    name: 'facilitate strategic platforms',
+    description:
+      'Perspiciatis maxime voluptate sit mollitia nobis. Reiciendis quibusdam inventore cupiditate ratione. Eius itaque rerum ea nihil.',
+    date: '2023-07-23T20:18:02.000Z',
+    location: '2660 Everardo Forges',
+    cohortId: 6307,
+  },
+];
 
 // === State ===
 let parties = [];
@@ -60,7 +107,6 @@ const getGuests = async () => {
 };
 
 // === Components ===
-
 /** Party name that shows more details about the party when clicked */
 const PartyListItem = (party) => {
   const $li = document.createElement('li');
@@ -106,8 +152,13 @@ const SelectedParty = () => {
     <address>${selectedParty.location}</address>
     <p>${selectedParty.description}</p>
     <GuestList></GuestList>
+    <DeleteButton></DeleteButton>
+    <BackButton></BackButton>
   `;
+
   $party.querySelector('GuestList').replaceWith(GuestList());
+  $party.querySelector('DeleteButton').replaceWith(DeleteButton());
+  $party.querySelector('BackButton').replaceWith(BackButton());
 
   return $party;
 };
@@ -132,6 +183,68 @@ const GuestList = () => {
   return $ul;
 };
 
+/** Form to add a new party */
+const NewPartyForm = () => {
+  const $newPartyForm = document.createElement('form');
+  $newPartyForm.innerHTML = `
+  <label>
+    Name
+    <input name="name"></input>
+  </label>
+  <label>
+    Description
+    <input name="description"></input>
+  </label>
+  <label>
+    Date
+    <input name="date"></input>
+  </label>
+  <label>
+    Location
+    <input name="location"></input>
+  </label>
+  <input type="submit"></input>
+  `;
+
+  $newPartyForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    console.log(e.target);
+  });
+
+  return $newPartyForm;
+};
+
+/** Button to reset selectedParty state variable */
+const BackButton = () => {
+  const $backButton = document.createElement('button');
+  $backButton.innerText = 'Back';
+
+  $backButton.addEventListener('click', () => console.log('back'));
+
+  return $backButton;
+};
+
+/** Button to delete selected party */
+const DeleteButton = () => {
+  const $deleteButton = document.createElement('button');
+  $deleteButton.innerText = 'Delete Event';
+
+  $deleteButton.addEventListener('click', (e) => console.log(e.target));
+
+  return $deleteButton;
+};
+
+/** Button to reset API */
+const ResetParties = () => {
+  const $resetParties = document.createElement('button');
+  $resetParties.innerText = 'Reset Parties';
+
+  $resetParties.addEventListener('click', () => console.log(initialParties));
+
+  return $resetParties;
+};
+
 // === Render ===
 const render = () => {
   const $app = document.querySelector('#app');
@@ -141,16 +254,21 @@ const render = () => {
       <section>
         <h2>Upcoming Parties</h2>
         <PartyList></PartyList>
+        <h3>Create a new event</h3>
+        <NewPartyForm></NewPartyForm>
       </section>
       <section id="selected">
         <h2>Party Details</h2>
         <SelectedParty></SelectedParty>
       </section>
+      <ResetParties></ResetParties>
     </main>
   `;
 
   $app.querySelector('PartyList').replaceWith(PartyList());
   $app.querySelector('SelectedParty').replaceWith(SelectedParty());
+  $app.querySelector('NewPartyForm').replaceWith(NewPartyForm());
+  $app.querySelector('ResetParties').replaceWith(ResetParties());
 };
 
 async function init() {
