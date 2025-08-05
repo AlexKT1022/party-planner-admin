@@ -106,6 +106,12 @@ const getGuests = async () => {
   }
 };
 
+const resetSelectedParty = () => {
+  selectedParty = undefined;
+
+  render();
+};
+
 // === Components ===
 /** Party name that shows more details about the party when clicked */
 const PartyListItem = (party) => {
@@ -220,7 +226,7 @@ const BackButton = () => {
   const $backButton = document.createElement('button');
   $backButton.innerText = 'Back';
 
-  $backButton.addEventListener('click', () => console.log('back'));
+  $backButton.addEventListener('click', resetSelectedParty);
 
   return $backButton;
 };
